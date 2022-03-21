@@ -1,10 +1,21 @@
 from tkinter import *
 from tkinter import ttk
-from pomodoro import test_function
+from pomodoro import Pomodoro
+import stopwatch
+import threading
 
 root = Tk()
 root.title('TimeApp')
 style = ttk.Style()
+
+stopwatch_object = stopwatch.StopwatchClass()
+
+
+# Creating a thread to run timer function in background
+def stopwatch_threading(func):
+    stopwatch_th = threading.Thread(target=func)
+    stopwatch_th.start()
+
 
 style.theme_create('Tab-style', parent="classic", settings={
     ".": {
@@ -39,14 +50,54 @@ style.theme_use("Tab-style")
 
 menu = ttk.Notebook(root, width=900, height=600)
 
+# TIMER ----------------------------------------------------------------------------------------------------------------
 timer_tab = ttk.Frame(menu)
 menu.add(timer_tab, text='Timer')
+timer_content = Label(timer_tab, text='TIMER', font=('Ink Free', 30, 'bold'), bg='#494949', fg='#db7a67')
+timer_content.pack()
 
+
+
+
+
+
+# STOPWATCH ------------------------------------------------------------------------------------------------------------
 stopwatch_tab = ttk.Frame(menu)
 menu.add(stopwatch_tab, text='Stopwatch')
+stopwatch_title = Label(stopwatch_tab, text='STOPWATCH', font=('Ink Free', 30, 'bold'), bg='#494949', fg='#db7a67')
+stopwatch_title.pack()
 
+start_button = Button(stopwatch_tab, text="Start", command=lambda: [start_button.pack_forget(),
+                                                                    stop_button.pack(),
+                                                                    stopwatch_threading(stopwatch_object.stopwatch_start)])
+start_button.pack()
+
+stop_button = Button(stopwatch_tab, text='Stop', command=lambda: [stop_button.pack_forget(),
+                                                                  continue_button.pack(),
+                                                                  reset_button.pack(),
+                                                                  stopwatch_object.stopwatch_stop()])
+
+continue_button = Button(stopwatch_tab, text='Continue', command=lambda: [stop_button.pack(),
+                                                                          continue_button.pack_forget(),
+                                                                          reset_button.pack_forget(),
+                                                                          stopwatch_threading(stopwatch_object.stopwatch_continue)])
+
+reset_button = Button(stopwatch_tab, text="Reset", command=lambda: [start_button.pack(),
+                                                                    continue_button.pack_forget(),
+                                                                    reset_button.pack_forget(),
+                                                                    stopwatch_threading(stopwatch_object.stopwatch_reset)])
+
+
+
+
+
+
+
+# POMODORO -------------------------------------------------------------------------------------------------------------
 pomodoro_tab = ttk.Frame(menu)
 menu.add(pomodoro_tab, text='Pomodoro')
+pomodoro_content = Label(pomodoro_tab, text='POMODORO', font=('Ink Free', 30, 'bold'), bg='#494949', fg='#db7a67')
+pomodoro_content.pack()
 
 menu.pack(expand=1, fill='both')
 
