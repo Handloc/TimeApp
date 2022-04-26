@@ -10,10 +10,10 @@ class TimerClass:
         self.s = ''
         self.stop = False
         self.timer_content = Label(self.parent, text='')
-        # tc = bg='#494949', fg='#db7a67', font=('Arial', 15, 'bold')
+        self.timer_content.config(font=('Arial', 100), fg='#db7a67', bg='#494949', borderwidth=0)
 
     def timer_start(self, hours=0, minutes=0, seconds=0):
-        self.timer_content.pack()
+        self.timer_content.place(relx=0.5, rely=0.3, anchor=CENTER)
         if (hours > 0 or minutes > 0) and seconds == 0:
             if hours < 10 and minutes < 10:
                 self.timer_content.config(text=f'0{hours}:0{minutes}:00')
@@ -75,5 +75,5 @@ class TimerClass:
         self.timer_start(int(self.h), int(self.m), int(self.s))
 
     def timer_reset(self):
-        self.timer_content.pack_forget()
+        self.timer_content.place_forget()
         self.stop = False
