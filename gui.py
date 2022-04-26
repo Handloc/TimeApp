@@ -89,7 +89,7 @@ class GUI:
         self.pomodoro_tab = ttk.Frame(self.menu)
         self.pomodoro_content = Label(self.pomodoro_tab, text='POMODORO', font=('Ink Free', 30, 'bold'), bg='#494949',
                                       fg=self.font_color)
-        
+
     def StyleFunction(self):
         self.style.theme_create('Tab-style', parent="classic", settings={
             ".": {
@@ -123,32 +123,39 @@ class GUI:
         self.style.theme_use("Tab-style")
 
     def validation(self):
-        if int(self.minute.get()) <= 60 and int(self.second.get()) <= 60:
-            self.timer_starting_point.show(int(self.hour.get()),
-                                           int(self.minute.get()),
-                                           int(self.second.get()))
-            self.timer_start_button.place(relx=0.5, rely=0.5, anchor=CENTER),
-            self.error_message.place_forget(),
-            self.timer_ok_button.place_forget(),
-            self.hour.place_forget(),
-            self.minute.place_forget(),
-            self.second.place_forget(),
-        elif int(self.minute.get()) > 60 and int(self.second.get()) > 60:
-            self.error_message.config(text='Value of minutes and seconds cannot be grater than 60',
-                                      bg='#494949',
-                                      fg='red',
-                                      font=('Arial', 25))
-            self.error_message.place(relx=0.5, rely=0.15, anchor=CENTER)
+        try:
+            if int(self.minute.get()) <= 60 and int(self.second.get()) <= 60:
+                self.timer_starting_point.show(int(self.hour.get()),
+                                               int(self.minute.get()),
+                                               int(self.second.get()))
+                self.timer_start_button.place(relx=0.5, rely=0.5, anchor=CENTER),
+                self.error_message.place_forget(),
+                self.timer_ok_button.place_forget(),
+                self.hour.place_forget(),
+                self.minute.place_forget(),
+                self.second.place_forget(),
+            elif int(self.minute.get()) > 60 and int(self.second.get()) > 60:
+                self.error_message.config(text='Value of minutes and seconds cannot be grater than 60',
+                                          bg='#494949',
+                                          fg='red',
+                                          font=('Arial', 25))
+                self.error_message.place(relx=0.5, rely=0.15, anchor=CENTER)
 
-        elif int(self.minute.get()) > 60 and int(self.second.get()) <= 60:
-            self.error_message.config(text='Value of minutes cannot be greater than 60',
-                                      bg='#494949',
-                                      fg='red',
-                                      font=('Arial', 25))
-            self.error_message.place(relx=0.5, rely=0.15, anchor=CENTER)
+            elif int(self.minute.get()) > 60 and int(self.second.get()) <= 60:
+                self.error_message.config(text='Value of minutes cannot be greater than 60',
+                                          bg='#494949',
+                                          fg='red',
+                                          font=('Arial', 25))
+                self.error_message.place(relx=0.5, rely=0.15, anchor=CENTER)
 
-        elif int(self.minute.get()) <= 60 and int(self.second.get()) > 60:
-            self.error_message.config(text='Value of seconds cannot be greater than 60',
+            elif int(self.minute.get()) <= 60 and int(self.second.get()) > 60:
+                self.error_message.config(text='Value of seconds cannot be greater than 60',
+                                          bg='#494949',
+                                          fg='red',
+                                          font=('Arial', 25))
+                self.error_message.place(relx=0.5, rely=0.15, anchor=CENTER)
+        except ValueError:
+            self.error_message.config(text='You can only enter values in range 0-60',
                                       bg='#494949',
                                       fg='red',
                                       font=('Arial', 25))
