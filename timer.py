@@ -9,12 +9,15 @@ class TimerClass:
         self.m = ''
         self.s = ''
         self.stop = False
+        self.timer_finish = False
         self.pomodoro_finish = False
         self.timer_content = Label(self.parent, text='')
         self.timer_content.config(font=('Arial', 100), fg='#db7a67', bg='#494949', borderwidth=0)
         self.is_pomodoro = False
         self.timer_finish_message = Label(self.parent, text='Time is up!',
                                           font=('Arial', 35, 'bold'), bg='#494949', fg='#db7a67')
+        self.pomodoro_finish_message = Label(self.parent, text='All pomodoro cycles\nare finished!',
+                                             font=('Arial', 35, 'bold'), bg='#494949', fg='#db7a67')
 
     def timer_start(self, hours=0, minutes=0, seconds=0):
         self.timer_content.place(relx=0.5, rely=0.3, anchor=CENTER)
@@ -35,17 +38,29 @@ class TimerClass:
                 if not self.is_pomodoro:
                     self.timer_finish_message.place(relx=0.5, rely=0.3, anchor=CENTER)
                     self.timer_content.place_forget()
+                    self.timer_finish = True
                     break
                 else:
+                    self.timer_content.place_forget()
+                    self.pomodoro_finish = True
                     break
             else:
                 seconds -= 1
-                if minutes > 0 and seconds == 0:
-                    minutes -= 1
-                    seconds = 60
-                elif hours > 0 and minutes == 0:
+                if hours > 0 and minutes == 0 and seconds == 0:
+                    if hours < 10:
+                        time.sleep(1)
+                        self.timer_content.config(text=f'{self.h}:00:00')
+                        self.timer_content.update()
+                    elif hours >= 10:
+                        time.sleep(1)
+                        self.timer_content.config(text=f'{self.h}:00:00')
+                        self.timer_content.update()
                     hours -= 1
-                    minutes = 60
+                    minutes = 59
+                    seconds = 59
+                elif minutes > 0 and seconds == 0:
+                    minutes -= 1
+                    seconds = 59
                 time.sleep(1)
                 if hours < 10:
                     self.h = f'0{hours}'
@@ -65,7 +80,7 @@ class TimerClass:
                     if minutes < 10:
                         self.m = f'0{int(minutes) + 1}'
                     elif minutes >= 10:
-                        self.m = f'{int(minutes) + 1}'
+                        self.m = f'{int(minutes)  + 1}'
                     self.s = f'00'
                 elif seconds < 10:
                     self.s = f'0{seconds}'
