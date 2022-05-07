@@ -11,17 +11,28 @@ class TimerClass:
         self.stop = False
         self.timer_finish = False
         self.pomodoro_finish = False
+        self.is_pomodoro_finished = False
+        self.is_break_finished = False
         self.timer_content = Label(self.parent, text='')
         self.timer_content.config(font=('Arial', 100), fg='#db7a67', bg='#494949', borderwidth=0)
         self.is_pomodoro = False
+        self.is_break = False
         self.timer_finish_message = Label(self.parent, text='Time is up!',
                                           font=('Arial', 35, 'bold'), bg='#494949', fg='#db7a67')
-        self.pomodoro_finish_message = Label(self.parent, text='All pomodoro cycles\nare finished!',
-                                             font=('Arial', 35, 'bold'), bg='#494949', fg='#db7a67')
 
     def timer_start(self, hours=0, minutes=0, seconds=0):
         self.timer_content.place(relx=0.5, rely=0.3, anchor=CENTER)
-        if (hours > 0 or minutes > 0) and seconds == 0:
+        if hours > 0 and minutes == 0 and seconds == 0:
+            if hours < 10:
+                time.sleep(1)
+                self.timer_content.config(text=f'{self.h}:00:00')
+            elif hours >= 10:
+                time.sleep(1)
+                self.timer_content.config(text=f'{self.h}:00:00')
+            hours -= 1
+            minutes = 59
+            seconds = 60
+        elif (hours > 0 or minutes > 0) and seconds == 0:
             if hours < 10 and minutes < 10:
                 self.timer_content.config(text=f'0{hours}:0{minutes}:00')
             elif hours >= 10 and minutes < 10:
@@ -35,30 +46,28 @@ class TimerClass:
             minutes -= 1
         while not self.stop:
             if hours == 0 and minutes == 0 and seconds == 0:
-                if not self.is_pomodoro:
+                if not self.is_pomodoro and not self.is_break:
                     self.timer_finish_message.place(relx=0.5, rely=0.3, anchor=CENTER)
                     self.timer_content.place_forget()
                     self.timer_finish = True
                     break
-                else:
-                    self.timer_content.place_forget()
-                    self.pomodoro_finish = True
+                elif self.is_pomodoro:
+                    self.is_pomodoro_finished = True
+                    self.is_break_finished = False
+                    self.is_pomodoro = False
+                    self.is_break = True
+                    print(f'Pomodoro: {self.is_pomodoro_finished}')
+                    break
+                elif self.is_break:
+                    self.is_break_finished = True
+                    self.is_pomodoro_finished = False
+                    self.is_pomodoro = True
+                    self.is_break = False
+                    print("break end")
                     break
             else:
                 seconds -= 1
-                if hours > 0 and minutes == 0 and seconds == 0:
-                    if hours < 10:
-                        time.sleep(1)
-                        self.timer_content.config(text=f'{self.h}:00:00')
-                        self.timer_content.update()
-                    elif hours >= 10:
-                        time.sleep(1)
-                        self.timer_content.config(text=f'{self.h}:00:00')
-                        self.timer_content.update()
-                    hours -= 1
-                    minutes = 59
-                    seconds = 59
-                elif minutes > 0 and seconds == 0:
+                if minutes > 0 and seconds == 0:
                     minutes -= 1
                     seconds = 59
                 time.sleep(1)
