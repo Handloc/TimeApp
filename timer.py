@@ -56,14 +56,12 @@ class TimerClass:
                     self.is_break_finished = False
                     self.is_pomodoro = False
                     self.is_break = True
-                    print(f'Pomodoro: {self.is_pomodoro_finished}')
                     break
                 elif self.is_break:
                     self.is_break_finished = True
                     self.is_pomodoro_finished = False
                     self.is_pomodoro = True
                     self.is_break = False
-                    print("break end")
                     break
             else:
                 seconds -= 1
