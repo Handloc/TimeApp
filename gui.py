@@ -236,6 +236,7 @@ class GUI:
                                                   int(self.pomodoro_second_break.get()),
                                                   "break")
                 self.pomodoro_break_start_button.place(relx=0.5, rely=0.5, anchor=CENTER)
+                self.pomodoro_stop_button.place_forget()
 
     def pomodoro_break_round(self):
         if self.pomodoro_object.is_break_finished:
@@ -254,6 +255,7 @@ class GUI:
                                                   int(self.pomodoro_second.get()),
                                                   "pomodoro")
                 self.pomodoro_start_button.place(relx=0.5, rely=0.5, anchor=CENTER)
+                self.pomodoro_stop_button.place_forget()
 
     def timer_validation(self):
         try:
@@ -298,6 +300,7 @@ class GUI:
     def pomodoro_cycle_number_validation(self):
         try:
             int(self.pomodoro_cycles_number.get())
+            self.pomodoro_error_message.place_forget()
             self.pomodoro_cycle.place_forget()
             self.pomodoro_start_button.place(relx=0.5, rely=0.5, anchor=CENTER)
             self.pomodoro_cycles_button.place_forget()
