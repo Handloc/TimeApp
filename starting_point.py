@@ -9,7 +9,7 @@ class StartingPoint:
         self.s = ''
         self.timer_content = Label(self.parent, text='')
 
-    def show(self, hours, minutes, seconds):
+    def show(self, hours, minutes, seconds, display_type):
         if hours >= 10:
             self.h = f'{hours}'
         else:
@@ -22,7 +22,10 @@ class StartingPoint:
             self.s = f'{seconds}'
         else:
             self.s = f'0{seconds}'
-        self.timer_content.config(font=('Arial', 100), fg='#db7a67', bg='#494949', borderwidth=0)
+        if display_type == "pomodoro":
+            self.timer_content.config(font=('Arial', 100), fg='#db7a67', bg='#494949', borderwidth=0)
+        elif display_type == "break":
+            self.timer_content.config(font=('Arial', 100), fg='green', bg='#494949', borderwidth=0)
         self.timer_content.config(text=f'{self.h}:{self.m}:{self.s}')
         self.timer_content.place(relx=0.5, rely=0.3, anchor=CENTER)
 
