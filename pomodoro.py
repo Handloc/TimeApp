@@ -31,9 +31,9 @@ class PomodoroClass(TimerClass):
         self.num_of_cycles = num_of_cycles
 
     def PomodoroRound(self):
+        self.timer_content.config(font=('Arial', 100), fg='#db7a67', bg='#494949', borderwidth=0)
         self.is_pomodoro = True
         if not self.pomodoro_finish and self.is_pomodoro:
-            self.timer_content.config(font=('Arial', 100), fg='#db7a67', bg='#494949', borderwidth=0)
             self.round_display.place(relx=0.5, rely=0.85, anchor=CENTER)
             self.round_display.config(text=f'{self.cycle_counter}/{self.num_of_cycles}')
             self.timer_start(self.hours, self.minutes, self.seconds)
@@ -52,5 +52,5 @@ class PomodoroClass(TimerClass):
                 self.all_cycles_are_finished = True
                 self.cycle_counter = 1
                 self.round_display.place_forget()
-            self.timer_content.config(font=('Arial', 100), fg='#db7a67', bg='#494949', borderwidth=0)
+
 
