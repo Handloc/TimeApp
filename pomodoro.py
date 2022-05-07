@@ -1,47 +1,56 @@
-import time
+from timer import TimerClass
+from tkinter import *
 
 
-class Timer:
-    def __init__(self, pomodoro_minutes=0, pomodoro_seconds=10, break_length=5, long_break_length=15):
-        self.pomodoro_minutes = pomodoro_minutes
-        self.pomodoro_seconds = pomodoro_seconds
-        self.break_length = break_length
-        self.long_break_length = long_break_length
+class PomodoroClass(TimerClass):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.break_finish = False
+        self.all_cycles_are_finished = False
+        self.cycle_counter = 1
+        self.break_message = Label(self.parent, text='BREAK', font=('Arial', 35, 'bold'), bg='#494949', fg='green')
+        self.pomodoro_finish_message = Label(self.parent, text='All pomodoro cycles\nare finished!',
+                                             font=('Arial', 35, 'bold'), bg='#494949', fg='#db7a67')
+        self.round_display = Label(self.parent, text='', font=('Arial', 35, 'bold'), bg='#494949', fg='#db7a67')
+        self.hours = 0
+        self.minutes = 0
+        self.seconds = 0
+        self.break_hours = 0
+        self.break_minutes = 0
+        self.break_seconds = 0
+        self.num_of_cycles = 0
 
-    def time_printing(self):
-        if self.pomodoro_minutes < 10 and self.pomodoro_seconds < 10:
-            print(f'0{str(self.pomodoro_minutes)}:0{str(self.pomodoro_seconds)}')
-        elif self.pomodoro_minutes < 10 and self.pomodoro_seconds >= 10:
-            print(f'0{str(self.pomodoro_minutes)}:{str(self.pomodoro_seconds)}')
-        elif self.pomodoro_minutes > 10 and self.pomodoro_seconds < 10:
-            print(f'{str(self.pomodoro_minutes)}:0{str(self.pomodoro_seconds)}')
-        else:
-            print(f'{str(self.pomodoro_minutes)}:{str(self.pomodoro_seconds)}')
+    def PomodoroCycle(self, hours=0, minutes=0, seconds=0, break_hours=0, break_minutes=0, break_seconds=0,
+                      num_of_cycles=0):
+        self.hours = hours
+        self.minutes = minutes
+        self.seconds = seconds
+        self.break_hours = break_hours
+        self.break_minutes = break_minutes
+        self.break_seconds = break_seconds
+        self.num_of_cycles = num_of_cycles
 
-    def counting_down(self):
-        if self.pomodoro_minutes >= 1 and self.pomodoro_seconds == 0:
-            self.pomodoro_minutes -= 1
-            self.pomodoro_seconds = 59
-            while self.pomodoro_minutes >= 0 and self.pomodoro_seconds >= 0:
-                while self.pomodoro_seconds >= 0:
-                    if self.pomodoro_minutes >= 1 and self.pomodoro_seconds == 0:
-                        self.time_printing()
-                        self.pomodoro_minutes -= 1
-                        self.pomodoro_seconds = 59
-                    else:
-                        self.time_printing()
-                        time.sleep(0.01)
-                        self.pomodoro_seconds -= 1
-        elif self.pomodoro_minutes >= 1 and self.pomodoro_seconds >= 0:
-            while self.pomodoro_seconds >= 0:
-                self.time_printing()
-                self.pomodoro_seconds -= 1
-                if self.pomodoro_seconds == 0 and self.pomodoro_minutes >= 1:
-                    self.time_printing()
-                    self.pomodoro_minutes -= 1
-                    self.pomodoro_seconds = 59
-        else:
-            while self.pomodoro_seconds >= 0:
-                self.time_printing()
-                self.pomodoro_seconds -= 1
-        return "Time is up!!!"
+    def PomodoroRound(self):
+        self.is_pomodoro = True
+        if not self.pomodoro_finish and self.is_pomodoro:
+            self.timer_content.config(font=('Arial', 100), fg='#db7a67', bg='#494949', borderwidth=0)
+            self.round_display.place(relx=0.5, rely=0.85, anchor=CENTER)
+            self.round_display.config(text=f'{self.cycle_counter}/{self.num_of_cycles}')
+            self.timer_start(self.hours, self.minutes, self.seconds)
+
+    def BreakRound(self):
+        self.is_break = True
+        if not self.pomodoro_finish and self.is_break:
+            self.timer_content.config(font=('Arial', 100), fg='green', bg='#494949', borderwidth=0)
+            self.round_display.place(relx=0.5, rely=0.85, anchor=CENTER)
+            self.round_display.config(text=f'{self.cycle_counter}/{self.num_of_cycles}')
+            self.break_message.place(relx=0.5, rely=0.14, anchor=CENTER)
+            self.timer_start(self.break_hours, self.break_minutes, self.break_seconds)
+            self.cycle_counter += 1
+            self.round_display.config(text=f'{self.cycle_counter}/{self.num_of_cycles}')
+            if self.cycle_counter == self.num_of_cycles + 1:
+                self.all_cycles_are_finished = True
+                self.cycle_counter = 1
+                self.round_display.place_forget()
+            self.timer_content.config(font=('Arial', 100), fg='#db7a67', bg='#494949', borderwidth=0)
+
